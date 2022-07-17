@@ -22,10 +22,30 @@ const createGalleryMarkup = galleryData =>
 
 galleryContainerRef.innerHTML = createGalleryMarkup(galleryItems);
 
-const showLightboxModal = imageURL => {
-  const modal = basicLightbox.create(`<img src="${imageURL}" width="800" height="600">`);
+let modalWindow = null;
 
-  modal.show();
+const showLightboxModal = ({ alt, dataset: { source } }) => {
+  modalWindow = basicLightbox.create(`<img style="color: #fff" src="${source}" alt="${alt}" width="800" height="600">`, {
+    onShow: toggleKeyboardControls,
+    onClose: toggleKeyboardControls,
+  });
+
+  modalWindow.show();
+};
+
+const toggleKeyboardControls = () => {
+  if (!window.onkeydown) {
+    window.onkeydown = onWindowKeyDown;
+    return;
+  }
+
+  window.onkeydown = null;
+};
+
+const onWindowKeyDown = ({ code }) => {
+  if (code != 'Escape') return;
+
+  modalWindow.close();
 };
 
 const onGalleryContainerClick = event => {
@@ -33,7 +53,7 @@ const onGalleryContainerClick = event => {
 
   if (event.target.nodeName !== 'IMG') return;
 
-  showLightboxModal(event.target.dataset.source);
+  showLightboxModal(event.target);
 };
 
 galleryContainerRef.addEventListener('click', onGalleryContainerClick);
