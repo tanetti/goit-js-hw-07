@@ -26,14 +26,15 @@ let modalWindow = null;
 
 const showLightboxModal = ({ alt, dataset: { source } }) => {
   modalWindow = basicLightbox.create(`<img style="color: #fff" src="${source}" alt="${alt}" width="800" height="600">`, {
-    onShow: toggleKeyboardControls,
-    onClose: toggleKeyboardControls,
+    onShow: addKeyboardControls,
+    onClose: removeKeyboardControls,
   });
 
   modalWindow.show();
 };
 
-const toggleKeyboardControls = () => (window.onkeydown = window.onkeydown ? null : onWindowKeyDown);
+const addKeyboardControls = () => window.addEventListener('keydown', onWindowKeyDown);
+const removeKeyboardControls = () => window.removeEventListener('keydown', onWindowKeyDown);
 
 const onWindowKeyDown = ({ code }) => {
   if (code != 'Escape') return;
