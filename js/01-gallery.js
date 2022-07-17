@@ -33,14 +33,7 @@ const showLightboxModal = ({ alt, dataset: { source } }) => {
   modalWindow.show();
 };
 
-const toggleKeyboardControls = () => {
-  if (!window.onkeydown) {
-    window.onkeydown = onWindowKeyDown;
-    return;
-  }
-
-  window.onkeydown = null;
-};
+const toggleKeyboardControls = () => (window.onkeydown = window.onkeydown ? null : onWindowKeyDown);
 
 const onWindowKeyDown = ({ code }) => {
   if (code != 'Escape') return;
